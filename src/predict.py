@@ -405,21 +405,21 @@ def infer_solution(inputs):
     temp.append("exac(pl = "+str('{:.3e}'.format(label_dat[1]))+")")
     temp.append("pred(pl = "+str('{:.3e}'.format(label_dat[1]))+")")
     temp.append("-k")
-    temp.append("--b")
+    temp.append("--r")
     label.append(temp)
 
     temp = []
     temp.append("exac(pl = "+str('{:.3e}'.format(label_dat[2]))+")")
     temp.append("pred(pl = "+str('{:.3e}'.format(label_dat[2]))+")")
     temp.append("-k")
-    temp.append("--b")
+    temp.append("--g")
     label.append(temp)
 
     temp = []
     temp.append("exac(pl = "+str('{:.3e}'.format(label_dat[3]))+")")
     temp.append("pred(pl = "+str('{:.3e}'.format(label_dat[3]))+")")
     temp.append("-k")
-    temp.append("--b")
+    temp.append("--m")
 
     label.append(temp)
 
@@ -529,21 +529,21 @@ def infer_solution(inputs):
     temp.append("exac(pl = "+str('{:.3e}'.format(label_dat[1]))+")")
     temp.append("pred(pl = "+str('{:.3e}'.format(label_dat[1]))+")")
     temp.append("-k")
-    temp.append("--b")
+    temp.append("--r")
     label.append(temp)
 
     temp = []
     temp.append("exac(pl = "+str('{:.3e}'.format(label_dat[2]))+")")
     temp.append("pred(pl = "+str('{:.3e}'.format(label_dat[2]))+")")
     temp.append("-k")
-    temp.append("--b")
+    temp.append("--g")
     label.append(temp)
 
     temp = []
     temp.append("exac(pl = "+str('{:.3e}'.format(label_dat[3]))+")")
     temp.append("pred(pl = "+str('{:.3e}'.format(label_dat[3]))+")")
     temp.append("-k")
-    temp.append("--b")
+    temp.append("--m")
     label.append(temp)
 
     xtitle = r"$x$"
