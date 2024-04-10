@@ -21,8 +21,6 @@ def train_trunknet(inputs):
     layers_x = inputs['Architecture']['Trunk']
     activation = inputs['RBA']['Trunk']
     Basefunc = getattr(jnp, activation)
-    # print(activation)
-    # exec(f'baseFunc = jnp.{activation}') 
 
     command = 'rm -r '+folder
     os.system(command)
@@ -168,9 +166,6 @@ def train_trunknet(inputs):
 
     #output dimension for Branch and Trunk Net
     G_dim = layers_x[-1]
-
-    #Trunk Net
-    # layers_x = [x_dim] + [150]*5 + [G_dim]
 
     key = random.PRNGKey(1234)
     keys = random.split(key, num=nt)

@@ -151,19 +151,16 @@ def train_branchnet(inputs):
         return a, c, a1, F1, c1 
 
     def fnn_B(X, W, b, a, c, a1, F1, c1):
-        inputs = X#2.*(X - Xmin)/(Xmax - Xmin) - 1.0
-        # print("first input=\t",inputs.shape)
+        inputs = X
         L = len(W)
         for i in range(L-1):
             inputs =  BasefuncB(jnp.add(10*a[i]*jnp.add(jnp.dot(inputs, W[i]), b[i]),c[i])) \
                 + 10*a1[i]*jnp.sin(jnp.add(10*F1[i]*jnp.add(jnp.dot(inputs, W[i]), b[i]),c1[i])) 
         Y = jnp.dot(inputs, W[-1]) + b[-1]  
-        # print("Y=\t",Y.shape)   
         return Y
 
     def fnn_T(X, W, b, a, c, a1, F1, c1):
-        inputs = X#2.*(X - Xmin)/(Xmax - Xmin) - 1.0
-        # print("T first input=\t",inputs.shape)
+        inputs = X
         L = len(W)
         for i in range(L-1):
             inputs =  BasefuncT(jnp.add(10*a[i]*jnp.add(jnp.dot(inputs, W[i]), b[i]),c[i])) \
@@ -171,20 +168,14 @@ def train_branchnet(inputs):
         Y = jnp.dot(inputs, W[-1]) + b[-1]     
         return Y
 
-    # #input dimension for Branch Net
-    # u_dim = 1
-
-    #output dimension for Branch and Trunk Net
+    
     G_dim = int(np.ceil(layers_f[-1]/3))
 
-    #Branch Net
-    # layers_f = [u_dim] + [150]*5 + [3*G_dim]
     print("branch layers:\t",layers_f)
 
     key = random.PRNGKey(1234)
     keys = random.split(key, num=nt)
-    # keym = random.PRNGKey(4234)
-    # keysm = random.split(keym, num=nt)
+
     print("keysss=\t",keys)
     a_branch, c_branch, a1_branch, F1_branch , c1_branch = hyper_initial_frequencies(layers_f)
     W_branch, b_branch = [], []
@@ -220,25 +211,20 @@ def train_branchnet(inputs):
                 if 'model'+str(i+1)+'.' in file:
                     temp.append(file)
             f.append(temp)
-        # print("f=\t",f)
+
         model = []
         for i in range(nt):
-            # paramst=[]
             l2norm=[]
-            # print("len(f[i])=\t",len(f[i]))
             for j in range(len(f[i])):
                 filename = foldert+f[i][j]
-                # print("filename=\t",filename)
                 params = load_model(filename)
-                # print("len=\t",len(params))
                 pred = predictT(params, data)
                 l2 = jnp.mean(jnp.linalg.norm(u - pred, 2, axis=1)/np.linalg.norm(u , 2, axis=1))
                 l2norm.append(l2)
             l2norm = jnp.array(l2norm)
             minimum = jnp.argmin(l2norm)
             model.append(f[i][minimum])
-            # print("l2norm=\t",l2norm)
-            # print("l2norm=\t",minimum)
+
         return model
     foldert = './'+foldert+'/'
     modelt = choose_trunk_model(foldert,[v_train, x_train],u_train, tol)
@@ -274,9 +260,7 @@ def train_branchnet(inputs):
         W_branch,b_branch,a_branch, c_branch, a1_branch, F1_branch , c1_branch = params
         v, x = data
         u_out_branch = fnn_B(v, W_branch, b_branch,a_branch, c_branch, a1_branch, F1_branch , c1_branch)
-        # print("u_out_branch=\t",u_out_branch.shape)
         u_pred = jnp.reshape(u_out_branch,(-1,G_dim,3))
-        # print("u_pred=\t",u_pred.shape)
         return u_pred
 
 

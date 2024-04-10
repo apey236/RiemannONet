@@ -1,10 +1,8 @@
 import jax
-# import tensorflow.compat as tf
 import numpy as np
 import scipy.io as io
 from scipy import signal
 import os
-# import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import time
@@ -112,19 +110,16 @@ def infer_solution(inputs):
 
 
     def fnn_B(X, W, b, a, c, a1, F1, c1):
-        inputs = X#2.*(X - Xmin)/(Xmax - Xmin) - 1.0
-        # print("first input=\t",inputs.shape)
+        inputs = X
         L = len(W)
         for i in range(L-1):
             inputs =  BasefuncB(jnp.add(10*a[i]*jnp.add(jnp.dot(inputs, W[i]), b[i]),c[i])) \
                 + 10*a1[i]*jnp.sin(jnp.add(10*F1[i]*jnp.add(jnp.dot(inputs, W[i]), b[i]),c1[i])) 
-        Y = jnp.dot(inputs, W[-1]) + b[-1]  
-        # print("Y=\t",Y.shape)   
+        Y = jnp.dot(inputs, W[-1]) + b[-1]   
         return Y
 
     def fnn_T(X, W, b, a, c, a1, F1, c1):
-        inputs = X#2.*(X - Xmin)/(Xmax - Xmin) - 1.0
-        # print("T first input=\t",inputs.shape)
+        inputs = X
         L = len(W)
         for i in range(L-1):
             inputs =  BasefuncT(jnp.add(10*a[i]*jnp.add(jnp.dot(inputs, W[i]), b[i]),c[i])) \
@@ -150,25 +145,19 @@ def infer_solution(inputs):
                 if 'model'+str(i+1)+'.' in file:
                     temp.append(file)
             f.append(temp)
-        # print("f=\t",f)
         model = []
         for i in range(nt):
-            # paramst=[]
             l2norm=[]
-            # print("len(f[i])=\t",len(f[i]))
             for j in range(len(f[i])):
                 filename = folder+f[i][j]
                 print("filename=\t",filename)
                 params = load_model(filename)
-                # print("len=\t",len(params))
                 pred = predictT(params, data)
                 l2 = jnp.mean(jnp.linalg.norm(u - pred, 2, axis=1)/np.linalg.norm(u , 2, axis=1))
                 l2norm.append(l2)
             l2norm = jnp.array(l2norm)
             minimum = jnp.argmin(l2norm)
             model.append(f[i][minimum])
-            # print("l2norm=\t",l2norm)
-            # print("l2norm=\t",minimum)
         return model
     foldert = './'+foldert+'/'
     modelt = choose_trunk_model(foldert,[v_train, x_train],u_train, tol)
@@ -181,8 +170,6 @@ def infer_solution(inputs):
         u_out_branch = fnn_B(v, W_branch, b_branch,a_branch, c_branch, a1_branch, F1_branch , c1_branch)
         u_out_branch = jnp.reshape(u_out_branch,(-1,G_dim,3))
         u_out_trunk = fnn_T(x, W_trunk, b_trunk,a_trunk, c_trunk, a1_trunk, F1_trunk , c1_trunk) # predict on trunk
-        # print("u_out_trunk=\t",u_out_trunk.shape)
-        # print("Rinv=\t",Rinv.shape)
         u_out_trunk = jnp.einsum('jm,mi->ji',u_out_trunk,Rinv )
         u_pred = jnp.einsum('imn,jm->ijn',u_out_branch, u_out_trunk) # matmul
 
@@ -203,18 +190,14 @@ def infer_solution(inputs):
                 if 'model'+str(i+1)+'.' in file:
                     temp.append(file)
             f.append(temp)
-        # print("f=\t",f)
         model = []
         l2ensemble = []
         for i in range(nt):
-            # paramst=[]
             l2norm=[]
-            # print("len(f[i])=\t",len(f[i]))
             for j in range(len(f[i])):
                 filename = folder+f[i][j]
                 print("filename=\t",filename)
                 params = load_model(filename)
-                # print("len=\t",len(params))
                 pred = predict(params,paramst[i], Rinv[i], data, tol)
                 l2 = jnp.mean(jnp.linalg.norm(u - pred, 2, axis=1)/np.linalg.norm(u , 2, axis=1))
                 l2norm.append(l2)
@@ -222,8 +205,6 @@ def infer_solution(inputs):
             minimum = jnp.argmin(l2norm)
             model.append(f[i][minimum])
             l2ensemble.append(l2norm)
-            # print("l2norm=\t",l2norm)
-            # print("l2norm=\t",minimum)
         return model,jnp.array(l2ensemble)
     folderb = './'+folderb+'/'
     filename = folderb+"Rmatrix"
@@ -235,7 +216,6 @@ def infer_solution(inputs):
         Rinv.append(temp)
 
     modelb,l2norm = choose_branch_model(folderb,paramst,Rinv,[v_test,x_test],u_test, tol)
-    # modelb=  ['model1.973', 'model2.372', 'model3.325', 'model4.627', 'model5.358', 'model6.704', 'model7.603', 'model8.642', 'model9.986', 'model10.830']
     print("modelb=\t",modelb)
 
     paramst = []
@@ -258,12 +238,6 @@ def infer_solution(inputs):
 
     pred = jnp.array(pred)
     print("pred1=\t",pred.shape)
-    # pred = pred.reshape(-1,pred.shape[-3],pred.shape[-2],pred.shape[-1])
-    # print("pred2=\t",pred.shape)
-    # pred_std = jnp.std(pred,axis=0)
-    # pred = jnp.mean(pred,axis=0)
-    # print("pred=\t",pred.shape)
-
 
     pred_test = []
     for i in range(nt):
@@ -271,23 +245,13 @@ def infer_solution(inputs):
         pred_test.append(temp)
 
     pred_test = jnp.array(pred_test)
-    print("pred1=\t",pred_test.shape)
-    # pred_test = pred_test.reshape(-1,pred_test.shape[-3],pred_test.shape[-2],pred_test.shape[-1])
-    print("pred2=\t",pred_test.shape)
-    # pred_test_std = jnp.std(pred_test,axis=0)
-    # pred_test = jnp.mean(pred_test,axis=0)
-    # print("pred_test=\t",pred_test.shape)
 
     if scaling=='01':
         pred = (pred)*(dmax-dmin)+dmin
         pred_test = (pred_test)*(dmax-dmin)+dmin
-    #     pred_std = (pred_std)*(dmax-dmin)+dmin
-    #     pred_test_std = (pred_test_std)*(dmax-dmin)+dmin
     else:
         pred = (pred+oness)*(dmax-dmin)/2.0+dmin
         pred_test = (pred_test+oness)*(dmax-dmin)/2.0+dmin
-        # pred_std = (pred_std+oness)*(dmax-dmin)/2.0+dmin
-        # pred_test_std = (pred_test_std+oness)*(dmax-dmin)/2.0+dmin
 
     if scaling=='01':
         u_train = (u_train)*(dmax-dmin)+dmin
@@ -372,8 +336,7 @@ def infer_solution(inputs):
 
     loss_std_T = np.std(loss_T,axis=-1)
     loss_T = np.mean(loss_T,axis=-1)
-    # print("lossstd=\t",loss_std)
-    # print("loss_T=\t",loss_T)
+
 
     err = np.abs(pred-u_train)
     err_test= np.abs(pred_test-u_test)
@@ -391,7 +354,6 @@ def infer_solution(inputs):
             for i in range(m):
                 ax.plot(x,data_e[i,:],label[i][2],label=label[i][0])
                 ax.plot(x,data_p[i,:],label[i][3],label=label[i][1])
-                # ax.fill_between(x.flatten(),data_e[i,:]-std[i,:],data_e[i,:]+std[i,:],color='khaki')
         elif tag == 21:
             for i in range(m):
                 ax.plot(x,data_e[i,:],label[i][2],label=label[i][0])
@@ -406,24 +368,18 @@ def infer_solution(inputs):
         elif tag==1:
             for i in range(m):
                 ax.plot(x,data_e[i,:],label[i][2],label=label[i][0])
-                # ax.fill_between(x.flatten(),data_e[i,:]-std[i,:],data_e[i,:]+std[i,:],color='khaki')
                 ax.set_yscale("log")
         elif tag==5:
             for i in range(m):
                 ax.plot(x,data_e[i,:],label=label[i])
                 ax.set_ylim(bottom=0.0, top=2.0)
-                # ax.fill_between(x.flatten(),data_e[i,:]-std[i,:],data_e[i,:]+std[i,:],color='khaki')
-                # ax.set_yscale("log")
+
         elif tag==6:
             for i in range(m):
                 ax.plot(x,data_e[i,:],label=label[i])
-                # ax.set_ylim(bottom=0.0, top=2.0)
-                # ax.fill_between(x.flatten(),data_e[i,:]-std[i,:],data_e[i,:]+std[i,:],color='khaki')
-                # ax.set_yscale("log")
         else:
             for i in range(m):
                 ax.plot(x,data_e[i,:],label[i][2],label=label[i][0])
-                # ax.fill_between(x.flatten(),data_e[i,:]-std[i,:],data_e[i,:]+std[i,:],color='khaki')
                 ax.set_yscale("log")
 
         ax.legend(loc='best')
@@ -750,39 +706,3 @@ def infer_solution(inputs):
     filename = Result_folder+"Loss_train_trunk"+".png"
 
     plotdata(epo,data_p,data_e,data_std,xtitle,ytitle,label,filename,4)
-
-
-    # # Plot the basis functions
-    # # data_p = pred[0:-1:100,:,1]
-    # data_e = np.zeros((nt,utrunk.shape[0]))
-    # # print("shape=\t",data_e.shape)
-    # for i in range(nt):
-    #     data_e[i,:] = utrunk_ensemble[i][:,0]
-
-    # xtitle = r"$x$"
-    # ytitle = r"Basis"
-    # # print(x)
-    # filename = folder+"basis"+postfix+".png"
-    # label=[]
-    # temp = []
-    # for j in range(nt):
-    #     label.append("ensemble"+str(j))
-    # # temp.append("-b")
-    # # label.append(temp)
-    # plotdata(x_train,data_p,data_e,data_std,xtitle,ytitle,label,filename,6)
-
-    # data_e = np.zeros((nt,utrunk.shape[0]))
-    # print("shape=\t",data_e.shape)
-    # for i in range(nt):
-    #     data_e[i,:] = np.sum(utrunk_ensemble[i],axis=1)
-    # xtitle = r"$x$"
-    # ytitle = r"Basis"
-    # # print(x)
-    # filename = folder+"basis_unity"+postfix+".png"
-    # label=[]
-    # temp = []
-    # for j in range(nt):
-    #     label.append("ensemble"+str(j))
-    # # temp.append("-b")
-    # # label.append(temp)
-    # plotdata(x_train,data_p,data_e,data_std,xtitle,ytitle,label,filename,5)
