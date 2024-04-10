@@ -10,7 +10,7 @@ To utilize this repository, you must first clone it to your local machine. Ensur
 python main.py
 ```
 ### Configuring Input Parameters
-Adjust input parameters using the inputs.yaml file. For LPR and IPR problems, utilize the cos base function of the Rowdy activation function for both trunk and branch networks to replicate the results. For HPR problems, set the trunk network to use tanh and the branch network to use cos. 
+Adjust input parameters using the `inputs.yaml` file. For LPR and IPR problems, utilize the cos base function of the Rowdy activation function for both trunk and branch networks to replicate the results. For HPR problems, set the trunk network to use tanh and the branch network to use cos. 
 
 ## Referencing
 
