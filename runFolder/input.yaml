@@ -1,0 +1,26 @@
+--- # Input file to setup parameters for two-step RiemannONet
+Problem: IPR # HPR: High pressure ratio, IPR: Intermediate pressure ratio, LPR: Low pressure ratio
+Epochs:  # number of epoch for training
+  Trunk: 1000000
+  Branch: 1000000
+learning_rate: 1.0e-3
+Data_scaling: '01'
+Ensembles: 10 #number of ensembles
+Decomposition: SVD # Ortho-normalization method (SVD or QR)
+Architecture: # configuration of the trunk and branch networks.
+  Trunk: [1,150,150,150,150,150,150]
+  Branch: [1,150,150,150,150,150,450] # last layer of the branch net width is three time the last layer of trunk net width since we are learing rho, u, p
+RBA: #Rowdy base activation function
+  Trunk: cos
+  Branch: cos
+FSM: #frequency of saving the model (Epochs)
+  Trunk:  10000 
+  Branch: 10000
+FRL: #Frequency of reporting the loss values
+  Trunk:  500 
+  Branch: 500
+Model_folder: # Folder that contains the deeplearing model
+  Trunk: model_T
+  Branch: model_B
+Results_folder: Plot_files # Folder that contains the prediction visulizations
+
