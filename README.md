@@ -25,3 +25,7 @@ If you utilize RiemannONet in your research or draft a paper based on results ob
       archivePrefix={arXiv},
       primaryClass={cs.LG}
 }
+```
+## Authors
+RiemannONet is written by Ahmad Peyvan (Brown University).
+
