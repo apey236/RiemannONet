@@ -17,14 +17,13 @@ Adjust input parameters using the `inputs.yaml` file. For LPR and IPR problems, 
 If you utilize RiemannONet in your research or draft a paper based on results obtained with RiemannONet's assistance, please cite the following publication:
 
 ```bibtex
-@misc{peyvan2024riemannonets,
-      title={RiemannONets: Interpretable Neural Operators for Riemann Problems}, 
-      author={Ahmad Peyvan and Vivek Oommen and Ameya D. Jagtap and George Em Karniadakis},
-      year={2024},
-      eprint={2401.08886},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
-}
+@article{PEYVAN2024116996,
+	author = {Ahmad Peyvan and Vivek Oommen and Ameya D. Jagtap and George Em Karniadakis},
+	journal = {Computer Methods in Applied Mechanics and Engineering},
+	pages = {116996},
+	title = {RiemannONets: Interpretable neural operators for Riemann problems},
+	volume = {426},
+	year = {2024}}
 ```
 ## Authors
 RiemannONet is written by Ahmad Peyvan (Brown University).
