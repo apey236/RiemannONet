@@ -39,5 +39,5 @@ If you utilize RiemannONet in your research or draft a paper based on results ob
 	year = {2024}}
 ```
 ## Authors
-RiemannONet is written by Ahmad Peyvan (Brown University).
+RiemannONet is written by Ahmad Peyvan and Vivek Oommen (Brown University).
 
